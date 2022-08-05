@@ -2,10 +2,8 @@ package drh.concour.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class RoomConcour implements Serializable {
 
     @EmbeddedId
@@ -31,12 +30,12 @@ public class RoomConcour implements Serializable {
     @ManyToOne
     @MapsId("roomID")
     @JoinColumn(name = "roomID")
-    Room room;
+    private Room room;
 
     @JsonIgnore
     @ManyToOne
     @MapsId("concourID")
     @JoinColumn(name = "concourID")
-    Concour concourr;
+    private Concour concour;
 
 }

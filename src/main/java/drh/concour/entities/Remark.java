@@ -1,10 +1,8 @@
 package drh.concour.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Remark implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +28,11 @@ public class Remark implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="userID", nullable = false)
+    @JoinColumn(name="userID")
     private User user;
 
     @JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="concourID", nullable = false)
+    @JoinColumn(name="concourID")
     private Concour concour;
 }

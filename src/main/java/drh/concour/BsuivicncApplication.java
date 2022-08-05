@@ -2,12 +2,14 @@ package drh.concour;
 
 import drh.concour.entities.*;
 import drh.concour.repositories.*;
+import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +36,9 @@ public class BsuivicncApplication {
         RoomConcourRepository roomConcourRepository = context.getBean(RoomConcourRepository.class);
 
         return args -> {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 /*
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
             User p1 = new User(1169562,"abderrahim", "elbouraimi", "0607080909", "rabat", "a.elbouraimi@justice.gov.ma", "1169562",
                     encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "", "Direction des Ressources Humaines", "DRH");
@@ -65,7 +68,7 @@ public class BsuivicncApplication {
             roleRepository.save(ro2);
             roleRepository.save(ro3);
 
-            Set<Role> roles2 = new HashSet<Role>();
+            List<Role> roles2 = new ArrayList<>();
             roles2.add(ro1);
             p1.setRoles(roles2);
             p2.setRoles(roles2);
@@ -87,6 +90,28 @@ public class BsuivicncApplication {
             concourRepository.save(cn2);
             concourRepository.save(cn3);
             concourRepository.save(cn4);
+
+
+            CenterConcour ccn1 = new CenterConcour();
+            ccn1.setConcour(cn1);
+            ccn1.setCenter(c1);
+            centerConcourRepository.save(ccn1);
+
+            CenterConcour ccn2 = new CenterConcour();
+            ccn2.setConcour(cn2);
+            ccn2.setCenter(c1);
+            centerConcourRepository.save(ccn2);
+
+            CenterConcour ccn3 = new CenterConcour();
+            ccn3.setConcour(cn3);
+            ccn3.setCenter(c1);
+            centerConcourRepository.save(ccn3);
+
+            CenterConcour ccn4 = new CenterConcour();
+            ccn4.setConcour(cn4);
+            ccn4.setCenter(c1);
+            centerConcourRepository.save(ccn4);
+
 
 
             Room r1 = new Room("s1", "Salle 1");
@@ -115,38 +140,8 @@ public class BsuivicncApplication {
             roomRepository.save(r12);
 
 
-*/
 
-
-
-/*
-            System.out.println("---------------------------------FIN-----------------------------------------------");
-*/
-
-
-
-            /*CenterConcour ccn1 = new CenterConcour();
-            ccn1.setConcour(concourRepository.findById(1l).get());
-            ccn1.setCenter(centerRepository.findById(1l).get());
-            centerConcourRepository.save(ccn1);
-
-            CenterConcour ccn2 = new CenterConcour();
-            ccn2.setConcour(concourRepository.findById(2l).get());
-            ccn2.setCenter(centerRepository.findById(1l).get());
-            centerConcourRepository.save(ccn2);
-
-            CenterConcour ccn3 = new CenterConcour();
-            ccn3.setConcour(concourRepository.findById(3l).get());
-            ccn3.setCenter(centerRepository.findById(1l).get());
-            centerConcourRepository.save(ccn3);
-
-            CenterConcour ccn4 = new CenterConcour();
-            ccn4.setConcour(concourRepository.findById(4l).get());
-            ccn4.setCenter(centerRepository.findById(1l).get());
-            centerConcourRepository.save(ccn4);*/
-
-
-            /*RoomConcour rc1 = new RoomConcour();
+            RoomConcour rc1 = new RoomConcour();
             RoomConcour rc2 = new RoomConcour();
             RoomConcour rc3 = new RoomConcour();
             RoomConcour rc4 = new RoomConcour();
@@ -159,41 +154,41 @@ public class BsuivicncApplication {
             RoomConcour rc11 = new RoomConcour();
             RoomConcour rc12 = new RoomConcour();
 
-            rc1.setConcourr(concourRepository.findById(1l).get());
-            rc1.setRoom(roomRepository.findById(1l).get());
+            rc1.setConcour(cn1);
+            rc1.setRoom(r1);
 
-            rc2.setConcourr(concourRepository.findById(1l).get());
-            rc2.setRoom(roomRepository.findById(2l).get());
+            rc2.setConcour(cn1);
+            rc2.setRoom(r2);
 
-            rc3.setConcourr(concourRepository.findById(1l).get());
-            rc3.setRoom(roomRepository.findById(3l).get());
+            rc3.setConcour(cn1);
+            rc3.setRoom(r3);
 
-            rc4.setConcourr(concourRepository.findById(2l).get());
-            rc4.setRoom(roomRepository.findById(4l).get());
+            rc4.setConcour(cn2);
+            rc4.setRoom(r4);
 
-            rc5.setConcourr(concourRepository.findById(2l).get());
-            rc5.setRoom(roomRepository.findById(5l).get());
+            rc5.setConcour(cn2);
+            rc5.setRoom(r5);
 
-            rc6.setConcourr(concourRepository.findById(2l).get());
-            rc6.setRoom(roomRepository.findById(6l).get());
+            rc6.setConcour(cn2);
+            rc6.setRoom(r6);
 
-            rc7.setConcourr(concourRepository.findById(3l).get());
-            rc7.setRoom(roomRepository.findById(7l).get());
+            rc7.setConcour(cn3);
+            rc7.setRoom(r7);
 
-            rc8.setConcourr(concourRepository.findById(3l).get());
-            rc8.setRoom(roomRepository.findById(8l).get());
+            rc8.setConcour(cn3);
+            rc8.setRoom(r8);
 
-            rc9.setConcourr(concourRepository.findById(3l).get());
-            rc9.setRoom(roomRepository.findById(9l).get());
+            rc9.setConcour(cn3);
+            rc9.setRoom(r9);
 
-            rc10.setConcourr(concourRepository.findById(4l).get());
-            rc10.setRoom(roomRepository.findById(10l).get());
+            rc10.setConcour(cn4);
+            rc10.setRoom(r10);
 
-            rc11.setConcourr(concourRepository.findById(4l).get());
-            rc11.setRoom(roomRepository.findById(11l).get());
+            rc11.setConcour(cn4);
+            rc11.setRoom(r11);
 
-            rc12.setConcourr(concourRepository.findById(4l).get());
-            rc12.setRoom(roomRepository.findById(12l).get());
+            rc12.setConcour(cn4);
+            rc12.setRoom(r12);
 
 
             roomConcourRepository.save(rc1);
@@ -210,28 +205,39 @@ public class BsuivicncApplication {
             roomConcourRepository.save(rc12);
 
 
-*/
 
-            /*User u = userRepository.findUserByIdentifier("1169562");
+
+
+            System.out.println("---------------------------------FIN WITH LOVE-----------------------------------------------");*/
+
+/*
 
             System.out.println("------------------------------------- Resultat -----------------------------------------");
-            System.out.println("---------------------- Identifiant == "+u.getIdentifier());
+
+            User u = userRepository.findUserByIdentifier("1814978");
+            System.out.println("---------------------- Identifiant == "+u.getUsername());
             System.out.println( "\n");
-            System.out.println("---------------------- Centre == "+u.getCenter().getAddress()+" - "+u.getCenter().getCity());
+
+
+            Center c = centerRepository.findById(u.getCenter().getId()).get();
+            System.out.println("---------------------- Centre == "+c.getAddress()+" - "+c.getCity());
+
 
             System.out.println("---------------------- liste Commission == ");
-            u.getCenter().getCommission().forEach(p -> {
-                System.out.println("-- "+p.getIdentifier()+ " :: "+p.getRank());
+            userRepository.getUsersByCenterId(c.getId()).forEach(p -> {
+                System.out.println("-- "+p.getUsername()+ " :: "+p.getRank());
             });
 
             System.out.println("---------------------- liste Concours == ");
-            u.getCenter().getCenterConcours().forEach(cc -> {
+            centerConcourRepository.getCenterConcoursByCenterId(c.getId()).forEach(cc -> {
                 System.out.println("CONCOUR ::: "+cc.getConcour().getTitle());
-                cc.getConcour().getRoomConcours().forEach(rc -> {
+                roomConcourRepository.getRoomConcoursByConcourId(cc.getConcour().getId()).forEach(rc -> {
                     System.out.println("------ROOM ::: "+rc.getRoom().getName()+" -- "+rc.getRoom().getNumber());
                 });
                 System.out.println( "\n");
-            });*/
+            });
+*/
+
         };
     }
 }

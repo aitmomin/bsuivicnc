@@ -1,6 +1,8 @@
 package drh.concour.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Center implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,12 +63,16 @@ public class Center implements Serializable {
         this.reports = 0;
     }
 
-    @OneToMany(mappedBy= "center", fetch= FetchType.EAGER)
-    private Set<User> commission = new HashSet<User>();
+    //@OneToMany(mappedBy= "center", fetch= FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "center", cascade = CascadeType.ALL)
+    private List<User> users = new ArrayList<User>();
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy= "center", fetch= FetchType.EAGER)
-    private Set<CenterConcour> centerConcours = new HashSet<>();
+
+    //@OneToMany(mappedBy= "center", fetch= FetchType.EAGER)
+    //@EqualsAndHashCode.Exclude
+    //@ToString.Exclude
+    @OneToMany(mappedBy= "concour", fetch= FetchType.EAGER)
+    private List<CenterConcour> centerConcours = new ArrayList<>();
 
 }

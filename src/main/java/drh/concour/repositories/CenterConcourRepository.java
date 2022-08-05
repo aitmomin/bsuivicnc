@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CenterConcourRepository extends JpaRepository<CenterConcour, Long> {
     // List<CenterConcour> getCenterConcourByCenter(long id);
+
+    List<CenterConcour> getCenterConcoursByCenterId(long id);
 }

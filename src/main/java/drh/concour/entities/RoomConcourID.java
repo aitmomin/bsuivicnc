@@ -9,9 +9,9 @@ public class RoomConcourID implements Serializable {
 
 
     @Column(name = "roomID")
-    Long roomID;
+    private Long roomID;
 
     @Column(name = "concourID")
-    Long concourID;
+    private Long concourID;
 
 }

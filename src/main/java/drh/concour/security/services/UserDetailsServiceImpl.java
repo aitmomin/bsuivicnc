@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Transactional
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
-		User p = userRepository.getUserByIdentifier(id).orElseThrow(
+		User p = userRepository.getUserByUsername(id).orElseThrow(
 				() -> new UsernameNotFoundException("User Not Found with -> id : " + id));
 
 		return UserPrinciple.build(p);

@@ -1,27 +1,27 @@
 package drh.concour.message.request;
 
 public class LoginForm {
-//    @NotBlank
+    //    @NotBlank
 //    @Size(min=3, max = 60)
-    private String Identifier;
+    private String username;
 
-//    @NotBlank
+    //    @NotBlank
 //    @Size(min = 6, max = 40)
-    private String motDePasse;
+    private String password;
 
-    public String getIdentifier() {
-        return Identifier;
+    public String getUsername() {
+        return username;
     }
 
-    public void setIdentifier(String identifier) {
-        this.Identifier = identifier;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getMotDePasse() {
-        return motDePasse;
+    public String getPassword() {
+        return password;
     }
 
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

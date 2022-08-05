@@ -1,22 +1,18 @@
 package drh.concour.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 @Table(name = "`user`")
 public class User implements Serializable {
     @Id
@@ -27,7 +23,7 @@ public class User implements Serializable {
     private String tel;
     private String city;
     private String mail;
-    private String identifier;
+    private String username;
     private String password;
     private String rank;
     private String degree;
@@ -38,7 +34,7 @@ public class User implements Serializable {
     private boolean isResponsible;
     private boolean isBlocked;
 
-    public User(long doti, String lastname, String firstname, String tel, String city, String mail, String identifier, String password, String rank, String degree,
+    public User(long doti, String lastname, String firstname, String tel, String city, String mail, String username, String password, String rank, String degree,
                 String cin, String direction, String code) {
         this.doti = doti;
         this.lastname = lastname;
@@ -46,7 +42,7 @@ public class User implements Serializable {
         this.tel = tel;
         this.city = city;
         this.mail = mail;
-        this.identifier = identifier;
+        this.username = username;
         this.password = password;
         this.rank = rank;
         this.degree = degree;
@@ -62,14 +58,15 @@ public class User implements Serializable {
     @JoinColumn(name = "centerID", referencedColumnName = "id")
     private Center center;
 
+    @JsonIgnore
     @OneToMany(mappedBy= "user", fetch= FetchType.LAZY)
     private List<Remark> remarks = new ArrayList<Remark>();
 
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             joinColumns= @JoinColumn(name="userID"),
             inverseJoinColumns=@JoinColumn(name="roleID")
     )
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 
 }

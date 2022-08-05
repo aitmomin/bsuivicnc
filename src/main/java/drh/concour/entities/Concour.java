@@ -1,9 +1,8 @@
 package drh.concour.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.hibernate.annotations.Proxy;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -15,6 +14,8 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+//@Proxy(lazy=false)
+@EqualsAndHashCode
 public class Concour implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +30,13 @@ public class Concour implements Serializable {
         this.concourDate = concourDate;
     }
 
-    @OneToMany(mappedBy="concour", fetch= FetchType.LAZY)
-    private Set<CenterConcour> centerConcours = new HashSet<>();
+    //@OneToMany(mappedBy="concour", fetch= FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy="center", fetch= FetchType.LAZY)
+    private List<CenterConcour> centerConcours = new ArrayList<>();
 
-    @OneToMany(mappedBy="concourr", fetch= FetchType.LAZY)
-    private Set<RoomConcour> roomConcours = new HashSet<>();
+    @OneToMany(mappedBy="room", fetch= FetchType.LAZY)
+    private List<RoomConcour> roomConcours = new ArrayList<>();
 }

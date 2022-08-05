@@ -14,8 +14,8 @@ public class CenterConcourID implements Serializable {
     private Concour concour;*/
 
     @Column(name = "centerID")
-    Long centerID;
+    private Long centerID;
 
     @Column(name = "concourID")
-    Long concourID;
+    private Long concourID;
 }

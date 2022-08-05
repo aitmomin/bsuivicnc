@@ -129,7 +129,7 @@ public class UserPrinciple implements UserDetails {
                 p.getTel(),
                 p.getCity(),
                 p.getMail(),
-                p.getIdentifier(),
+                p.getUsername(),
                 p.getPassword(),
                 p.getRank(),
                 p.getDegree(),
