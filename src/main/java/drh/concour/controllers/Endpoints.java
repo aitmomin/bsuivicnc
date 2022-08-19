@@ -66,6 +66,7 @@ public class Endpoints {
         }
         if (userRepository.existsByUsername(request.getUsername())) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            // User user = userRepository.findUserByUsername(request.getUsername());
             User user = userRepository.findUserByUsername(request.getUsername());
             if(encoder.matches(request.getPassword(), user.getPassword())){
                 Authentication authentication = authenticationManager.authenticate(
@@ -108,14 +109,23 @@ public class Endpoints {
     @RequestMapping(value="/users/{userID}/center", method=RequestMethod.GET)
     public ResponseEntity<?> getCenterByUser(@PathVariable long userID){
         Center center = null;
-        boolean exists = centerRepository.existsById(userID);
-        if (exists){
-            center = centerRepository.findById(userID).get();
-            return ResponseEntity.ok(center);
+        User user = null;
+        boolean existsUser = userRepository.existsById(userID);
+        if (existsUser){
+            user = userRepository.findById(userID).get();
+            boolean existsCenter = centerRepository.existsById(user.getCenter().getId());
+            if (existsCenter){
+                center = centerRepository.getCenterById(user.getCenter().getId());
+            } else {
+                return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),
+                        HttpStatus.BAD_REQUEST);
+            }
+
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),
                     HttpStatus.BAD_REQUEST);
         }
+        return ResponseEntity.ok(center);
     }
 
 
@@ -156,11 +166,12 @@ public class Endpoints {
         if (exists){
             center = centerRepository.findById(centerID).get();
             center.setReady(true);
+            center.setStep("step2");
             Date date = new Date();
             System.out.println(date);
             center.setReadyAt(date);
             centerRepository.save(center);
-            return new ResponseEntity<>(new ResponseMessage("Centre ready!"), HttpStatus.OK);
+            return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
                     HttpStatus.BAD_REQUEST);
@@ -168,17 +179,18 @@ public class Endpoints {
     }
 
     @PutMapping("/centers/{centerID}/opened")
-    public ResponseEntity<?> centreOpened(@PathVariable Long centerID) {
+    public ResponseEntity<?> centerOpened(@PathVariable Long centerID) {
         Center center = null;
         boolean exists = centerRepository.existsById(centerID);
         if (exists){
             center = centerRepository.findById(centerID).get();
             center.setOpened(true);
+            center.setStep("step3");
             Date date = new Date();
             System.out.println(date);
             center.setOpenedAt(date);
             centerRepository.save(center);
-            return new ResponseEntity<>(new ResponseMessage("Centre opened!"), HttpStatus.OK);
+            return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
                     HttpStatus.BAD_REQUEST);
@@ -192,11 +204,12 @@ public class Endpoints {
         if (exists){
             center = centerRepository.findById(centerID).get();
             center.setClosed(true);
+            center.setStep("step4");
             Date date = new Date();
             System.out.println(date);
             center.setClosedAt(date);
             centerRepository.save(center);
-            return new ResponseEntity<>(new ResponseMessage("Centre closed!"), HttpStatus.OK);
+            return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
                     HttpStatus.BAD_REQUEST);
@@ -210,11 +223,12 @@ public class Endpoints {
         if (exists){
             center = centerRepository.findById(centerID).get();
             center.setDistributed(true);
+            center.setStep("step5");
             Date date = new Date();
             System.out.println(date);
             center.setDistributedAt(date);
             centerRepository.save(center);
-            return new ResponseEntity<>(new ResponseMessage("Centre distributed!"), HttpStatus.OK);
+            return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
                     HttpStatus.BAD_REQUEST);
@@ -228,11 +242,12 @@ public class Endpoints {
         if (exists){
             center = centerRepository.findById(centerID).get();
             center.setEnd(true);
+            center.setStep("");
             Date date = new Date();
             System.out.println(date);
             center.setEndAt(date);
             centerRepository.save(center);
-            return new ResponseEntity<>(new ResponseMessage("Centre ended!"), HttpStatus.OK);
+            return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
                     HttpStatus.BAD_REQUEST);

@@ -15,10 +15,10 @@ import java.util.Set;
 //@Transactional(propagation= Propagation.REQUIRED, readOnly=true, noRollbackFor=Exception.class)
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> getUserByUsername(String identifier);
-    // Personne getPersonneByIdentifiant2(String id);
-    User findUserByUsername(String identifier);
-    Boolean existsByUsername(String identifier);
+    Optional<User> getUserByUsername(String username);
+    User findUserByUsername(String username);
+    // User findUserByDoti();
+    Boolean existsByUsername(String username);
     List<User> getUsersByCenterId(long id);
 
 

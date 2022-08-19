@@ -214,7 +214,7 @@ public class BsuivicncApplication {
 
             System.out.println("------------------------------------- Resultat -----------------------------------------");
 
-            User u = userRepository.findUserByIdentifier("1814978");
+            User u = userRepository.findUserByUsername("1814978");
             System.out.println("---------------------- Identifiant == "+u.getUsername());
             System.out.println( "\n");
 
@@ -238,6 +238,14 @@ public class BsuivicncApplication {
             });
 */
 
+            Center c = centerRepository.findById(1l).get();
+            c.setReady(false);
+            c.setEnd(false);
+            c.setDistributed(false);
+            c.setClosed(false);
+            c.setOpened(false);
+            c.setStep("step1");
+            centerRepository.save(c);
         };
     }
 }

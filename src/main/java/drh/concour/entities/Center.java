@@ -1,6 +1,7 @@
 package drh.concour.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.Proxy;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.*;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Center implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +41,7 @@ public class Center implements Serializable {
     private long presence;
     private long absence;
     private long reports;
+    private String step = "step1";
 
     public Center(String name, String address, String city, String region, Date plannedOpening, Date plannedClosing) {
         this.name = name;
