@@ -37,6 +37,11 @@ public class Concour implements Serializable {
     @OneToMany(mappedBy="center", fetch= FetchType.LAZY)
     private List<CenterConcour> centerConcours = new ArrayList<>();
 
-    @OneToMany(mappedBy="room", fetch= FetchType.LAZY)
-    private List<RoomConcour> roomConcours = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "concour", cascade = CascadeType.ALL)
+    private List<Room> rooms = new ArrayList<Room>();
+
+
+    /*@OneToMany(mappedBy="room", fetch= FetchType.LAZY)
+    private List<RoomConcour> roomConcours = new ArrayList<>();*/
 }

@@ -23,11 +23,30 @@ public class Room implements Serializable {
     private long id;
     private String number;
     private String name;
+    private long candidates;
+    private long presence = 0;
+    private long absence = 0;
+    private long reports = 0;
+    private boolean isDone = false;
 
-    public Room(String number, String name) {
+    public Room(String number, String name, long candidates) {
         this.number = number;
         this.name = name;
+        this.candidates = candidates;
     }
+
+    @JsonIgnore
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "concourID", referencedColumnName = "id")
+    private Concour concour;
+
+
+    /*@OneToMany(mappedBy= "concour", fetch= FetchType.LAZY)
+    private List<RoomConcour> roomConcours = new ArrayList<>();*/
+
+
+
+
 
     /*@JsonIgnore
     @ManyToOne(fetch= FetchType.LAZY)
@@ -37,6 +56,5 @@ public class Room implements Serializable {
     })
     private CenterConcour centerRoom;*/
 
-    @OneToMany(mappedBy= "concour", fetch= FetchType.LAZY)
-    private List<RoomConcour> roomConcours = new ArrayList<>();
+
 }

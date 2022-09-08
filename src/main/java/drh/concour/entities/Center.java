@@ -27,6 +27,8 @@ public class Center implements Serializable {
     private String region;
     private Date plannedOpening;
     private Date plannedClosing;
+    private Date dateConcour;
+    // fields for steps in frontend
     private boolean isReady;
     private Date readyAt;
     private boolean isClosed;
@@ -37,11 +39,13 @@ public class Center implements Serializable {
     private Date distributedAt;
     private boolean isEnd;
     private Date endAt;
-    private long candidates;
-    private long presence;
-    private long absence;
-    private long reports;
     private String step = "step1";
+    // fields for statistics
+    private long candidates;
+    private long presence = 0;
+    private long absence = 0;
+    private long reports = 0;
+
 
     public Center(String name, String address, String city, String region, Date plannedOpening, Date plannedClosing) {
         this.name = name;
@@ -67,7 +71,7 @@ public class Center implements Serializable {
     }
 
     //@OneToMany(mappedBy= "center", fetch= FetchType.LAZY)
-    @JsonIgnore
+    //@JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "center", cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<User>();
 

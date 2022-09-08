@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface RoomConcourRepository extends JpaRepository<RoomConcour, Long> {
-    List<RoomConcour> getRoomConcoursByConcourId(long id);
+//@Repository
+public interface RoomConcourRepository /*extends JpaRepository<RoomConcour, Long>*/ {
+    // List<RoomConcour> getRoomConcoursByConcourId(long id);
 }

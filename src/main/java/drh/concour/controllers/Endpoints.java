@@ -2,6 +2,7 @@ package drh.concour.controllers;
 
 import drh.concour.entities.*;
 
+import drh.concour.entities.models.ConcourWithRooms;
 import drh.concour.message.request.LoginForm;
 import drh.concour.message.response.JwtResponse;
 import drh.concour.message.response.ResponseMessage;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -47,11 +51,13 @@ public class Endpoints {
     @Autowired
     private CenterConcourRepository centerConcourRepository;
     @Autowired
-    private RoomConcourRepository roomConcourRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private ConcourWithRoomsRepository concourWithRoomsRepository;
+
+
 
 
     // ---> AUTHENTICATION LOGIN
@@ -126,6 +132,34 @@ public class Endpoints {
                     HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(center);
+    }
+
+    @PutMapping("/update/password/{identifier}")
+    public ResponseEntity<?> updatePassword(@PathVariable String identifier, @RequestBody User updated){
+        User user = null;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!identifier.isBlank() && !identifier.isEmpty()) {
+            boolean exists = userRepository.existsByUsername(identifier);
+            if (exists){
+                user = userRepository.findUserByUsername(identifier);
+                if (encoder.matches(updated.getPassword(), user.getPassword())){
+                    System.out.println("PASS == "+updated.getPassword());
+                    System.out.println("NEW == "+updated.getNewPassword());
+                    user.setPassword(encoder.encode(updated.getNewPassword()));
+                    userRepository.save(user);
+                } else {
+                    return new ResponseEntity<>(new ResponseMessage("mot de passe invalide."),
+                            HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>(new ResponseMessage("l'identifiant n'existe pas."),
+                        HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("l'identifiant n'est pas valide."),
+                    HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(user);
     }
 
 
@@ -254,21 +288,30 @@ public class Endpoints {
         }
     }
 
+    @RequestMapping(value="/all/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> getAllCenters(){
+        List<Center> centers = centerRepository.findAll();
+        centers.forEach(center -> {
+            List<User> jury = userRepository.getUsersByCenterId(center.getId());
+            center.setUsers(jury);
+        });
+        return ResponseEntity.ok(centers);
+    }
+
 
 
 
     // ---> CONCOUR
     @RequestMapping(value="/concours/{concourID}/rooms", method=RequestMethod.GET)
     public ResponseEntity<?> getRoomsByConcour(@PathVariable Long concourID){
-        boolean exists = roomRepository.existsById(concourID);
+        Concour cn = null;
+        boolean exists = concourRepository.existsById(concourID);
         if (exists){
-            List<Room> rooms = new ArrayList<>();
-            roomConcourRepository.getRoomConcoursByConcourId(concourID).forEach(cc -> {
-                rooms.add(cc.getRoom());
-            });
+            cn = concourRepository.findById(concourID).get();
+            List<Room> rooms = roomRepository.getRoomsByConcourId(cn.getId());;
             return ResponseEntity.ok(rooms);
         } else {
-            return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant du concour est incorrect !"),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -288,4 +331,48 @@ public class Endpoints {
                     HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value="/rooms/{roomID}", method=RequestMethod.GET)
+    public ResponseEntity<?> getRoomById(@PathVariable Long roomID){
+        boolean exists = roomRepository.existsById(roomID);
+        if (exists){
+            Room room = roomRepository.findById(roomID).get();
+            return ResponseEntity.ok(room);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value="/center/rooms/{centerID}", method=RequestMethod.GET)
+    public ResponseEntity<?> getAllRoomsByCenterId(@PathVariable Long centerID){
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            // List<Object> rooms = roomRepository.AllRoomsByCenterId(centerID);
+            // (List<ConcourWithRooms>) (Object) roomRepository.getAllRoomsByCenterId(centerID)
+            return ResponseEntity.ok(concourWithRoomsRepository.AllRoomsByCenterId(centerID));
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/room/update/absence/{roomID}")
+    public ResponseEntity<?> updateAbsenceOfRoom(@PathVariable Long roomID, @RequestBody Long absence){
+        Room room = null;
+        boolean exists = roomRepository.existsById(roomID);
+        if (exists){
+            room = roomRepository.findById(roomID).get();
+            room.setPresence(room.getCandidates() - absence);
+            room.setAbsence(absence);
+            room.setDone(true);
+            roomRepository.save(room);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("l'identifiant n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(room);
+    }
+
+
 }

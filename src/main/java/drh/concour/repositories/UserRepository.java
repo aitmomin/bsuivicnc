@@ -19,6 +19,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findUserByUsername(String username);
     // User findUserByDoti();
     Boolean existsByUsername(String username);
+
+    @Query(value = "select u.*\n" +
+            "from [db_cnc].[dbo].[user] u, center c\n" +
+            "where c.id = u.centerid\n" +
+            " and c.id = ?1\n" +
+            "order by is_responsible desc", nativeQuery = true)
     List<User> getUsersByCenterId(long id);
 
 

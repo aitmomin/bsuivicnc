@@ -16,15 +16,18 @@ import java.util.List;
 @Table(name = "`user`")
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long doti;
     private String lastname;
     private String firstname;
     private String tel;
     private String city;
+    @Column(unique=true)
     private String mail;
+    @Column(unique=true)
     private String username;
     private String password;
+    private String newPassword;
     private String rank;
     private String degree;
     private String cin;

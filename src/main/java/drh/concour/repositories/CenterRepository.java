@@ -13,9 +13,5 @@ import java.util.Set;
 @Repository
 public interface CenterRepository extends JpaRepository<Center, Long> {
     Center getCenterById(long id);
-    @Query(value="SELECT c.* " +
-            "FROM centre c, personne p " +
-            "where p.id = ?1 and c.id=p.centreid ", nativeQuery = true)
-    Center getCentreByPersonne(long id);
 
 }
