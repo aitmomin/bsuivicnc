@@ -28,13 +28,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getUsersByCenterId(long id);
 
 
-    @Query(value="select DISTINCT *\n" +
-            "from [user] u, center c, center_concour cc, concour cn, room_concour rc, room r\n" +
-            "where u.centerid = c.id\n" +
-            "\tand c.id = cc.centerid\n" +
-            "\tand c.id = cc.concourid\n" +
-            "\tand c.id = rc.concourid\n" +
-            "\tand r.id = rc.roomid\n" +
-            "\tand u.identifier like ?1", nativeQuery = true)
-    User findUserByIdentifier2(String id);
 }
