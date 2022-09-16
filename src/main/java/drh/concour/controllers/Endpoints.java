@@ -3,6 +3,7 @@ package drh.concour.controllers;
 import drh.concour.entities.*;
 
 import drh.concour.entities.models.ConcourWithRooms;
+import drh.concour.entities.models.Feeds;
 import drh.concour.message.request.LoginForm;
 import drh.concour.message.response.JwtResponse;
 import drh.concour.message.response.ResponseMessage;
@@ -56,6 +57,8 @@ public class Endpoints {
     private RoomRepository roomRepository;
     @Autowired
     private ConcourWithRoomsRepository concourWithRoomsRepository;
+    @Autowired
+    private FeedsRepository feedsRepository;
 
 
 
@@ -205,6 +208,7 @@ public class Endpoints {
             System.out.println(date);
             center.setReadyAt(date);
             centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), "Centre est Prêt", date));
             return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
@@ -224,6 +228,7 @@ public class Endpoints {
             System.out.println(date);
             center.setOpenedAt(date);
             centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), "Ouverture du centre", date));
             return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
@@ -243,6 +248,7 @@ public class Endpoints {
             System.out.println(date);
             center.setClosedAt(date);
             centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), "Fermeture du centre", date));
             return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
@@ -262,6 +268,7 @@ public class Endpoints {
             System.out.println(date);
             center.setDistributedAt(date);
             centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), "Distribution des papiers", date));
             return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
@@ -281,6 +288,7 @@ public class Endpoints {
             System.out.println(date);
             center.setEndAt(date);
             centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), "Fin du concour", date));
             return new ResponseEntity<>(center, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
@@ -296,6 +304,84 @@ public class Endpoints {
             center.setUsers(jury);
         });
         return ResponseEntity.ok(centers);
+    }
+
+    @RequestMapping(value="/count/all/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllCenters(){
+        long numbers = centerRepository.countAllCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/ready/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllReadyCenters(){
+        long numbers = centerRepository.countAllReadyCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/opened/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllOpenedCenters(){
+        long numbers = centerRepository.countAllOpenedCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/closed/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllClosedCenters(){
+        long numbers = centerRepository.countAllClosedCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/distributed/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllDistributedCenters(){
+        long numbers = centerRepository.countAllDistributedCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/ended/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllEndedCenters(){
+        long numbers = centerRepository.countAllEndedCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/sum/all/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> sumOfAllCenters(){
+        long statistics[] = new long[4];
+        statistics[0] = centerRepository.sumCandidatesOfAllCenters();
+        statistics[1] = centerRepository.sumPresenceOfAllCenters();
+        statistics[2] = centerRepository.sumAbsenceOfAllCenters();
+        statistics[3] = centerRepository.sumReportsOfAllCenters();
+        return ResponseEntity.ok(statistics);
+    }
+
+    @RequestMapping(value="/centers/{centerID}", method=RequestMethod.GET)
+    public ResponseEntity<?> getCenterById(@PathVariable long centerID){
+        Center center = null;
+        boolean existsCenter = centerRepository.existsById(centerID);
+        if (existsCenter){
+            center = centerRepository.findById(centerID).get();
+            return ResponseEntity.ok(center);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant du centre est incorrect !"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
+    // FEED
+    @RequestMapping(value="/all/feeds", method=RequestMethod.GET)
+    public ResponseEntity<?> getFeeds(){
+        return ResponseEntity.ok(feedsRepository.findAllSortedByfeedDate());
+    }
+
+    @PutMapping("/update/seen/feeds")
+    public ResponseEntity<?> updateFeeds(){
+        List<Feeds> feeds = feedsRepository.findAllSortedByfeedDate();
+        feeds.forEach(f -> {
+            f.setSeen(true);
+            feedsRepository.save(f);
+        });
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -358,17 +444,29 @@ public class Endpoints {
     }
 
     @PutMapping("/room/update/absence/{roomID}")
-    public ResponseEntity<?> updateAbsenceOfRoom(@PathVariable Long roomID, @RequestBody Long absence){
+    public ResponseEntity<?> updateAbsenceOfRoom(@PathVariable Long roomID, @RequestParam("absence") String absence, @RequestParam("centerID") String centerID){
         Room room = null;
+        Center center = null;
         boolean exists = roomRepository.existsById(roomID);
-        if (exists){
-            room = roomRepository.findById(roomID).get();
-            room.setPresence(room.getCandidates() - absence);
-            room.setAbsence(absence);
-            room.setDone(true);
-            roomRepository.save(room);
+        boolean exists2 = centerRepository.existsById(Long.parseLong(centerID));
+        if (exists2){
+            if (exists){
+                room = roomRepository.findById(roomID).get();
+                room.setPresence(room.getCandidates() - Long.parseLong(absence));
+                room.setAbsence(Long.parseLong(absence));
+                room.setDone(true);
+                roomRepository.save(room);
+
+                center = centerRepository.findById(Long.parseLong(centerID)).get();
+                center.setAbsence(centerRepository.sumAbsenceByCenter(Long.parseLong(centerID)));
+                center.setPresence(centerRepository.sumPresenceByCenter(Long.parseLong(centerID)));
+                centerRepository.save(center);
+            } else {
+                return new ResponseEntity<>(new ResponseMessage("l'identifiant room n'existe pas."),
+                        HttpStatus.BAD_REQUEST);
+            }
         } else {
-            return new ResponseEntity<>(new ResponseMessage("l'identifiant n'existe pas."),
+            return new ResponseEntity<>(new ResponseMessage("l'identifiant centre n'existe pas."),
                     HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(room);

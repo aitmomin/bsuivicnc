@@ -12,6 +12,7 @@ public class ConcourWithRooms implements Serializable {
     @Id
     private long id;
     private long concourid;
+    private String city;
     private String title;
     private String rank;
     private String name;

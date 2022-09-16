@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ConcourWithRoomsRepository extends JpaRepository<ConcourWithRooms, Long> {
-    @Query(value="select r.concourid, r.id, cn.title, cn.rank, r.name, r.candidates, r.presence, r.absence\n" +
+    @Query(value="select c.city, r.concourid, r.id, cn.title, cn.rank, r.name, r.candidates, r.presence, r.absence\n" +
             "    from center c, center_concour cc, concour cn, room r\n" +
             "    where c.id = cc.centerid\n" +
             "    and cc.concourid = cn.id\n" +

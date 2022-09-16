@@ -251,6 +251,7 @@ public class BsuivicncApplication {
             */
 
             /*Center c = centerRepository.findById(1l).get();
+            Center cc = centerRepository.findById(2l).get();
             System.out.println("----------------------READY "+c.isReady());
             c.setReady(false);
             c.setEnd(false);
@@ -258,8 +259,24 @@ public class BsuivicncApplication {
             c.setClosed(false);
             c.setOpened(false);
             c.setStep("step1");
-            c.setDateConcour(new Date("2022/07/11"));
+
+            cc.setReady(false);
+            cc.setEnd(false);
+            cc.setDistributed(false);
+            cc.setClosed(false);
+            cc.setOpened(false);
+            cc.setStep("step1");
+            cc.setDateConcour(new Date("2022/07/11"));
             centerRepository.save(c);
+            centerRepository.save(cc);
+
+            User u = userRepository.findUserByUsername("112233");
+            Role r = roleRepository.getRoleByRoleName("USER");
+            List<Role> roles2 = new ArrayList<>();
+            roles2.add(r);
+            u.setRoles(roles2);
+            userRepository.save(u);
+
             System.out.println("----------------------PEACE");*/
 
             /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -273,6 +290,36 @@ public class BsuivicncApplication {
             p1.setRoles(roles2);
             userRepository.save(p1);*/
 
+            /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            User p1 = new User(112233,"tttttttt", "tttttttt", "0607080909", "rabat", "a.a@justice.gov.ma", "112233",
+                    encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
+            p1.setResponsible(true);
+            User p2 = new User(445566,"ait cccccc", "ccccccccccc", "0607080909", "kénitra", "b.b@justice.gov.ma", "445566",
+                    encoder.encode("1234"), "Commissaire Judiciaire", "2ème Grade", "G684980", "Direction des Ressources Humaines", "DRH");
+            User p3 = new User(778899,"ddddddd", "dddddddddd", "0607080909", "rabat", "c.c@justice.gov.ma", "778899",
+                    encoder.encode("1234"), "Rédacteur judiciare", "1ère Grade", "", "Direction des Etudes de la Coopération et de la Modernisation", "DECM");
+            User p4 = new User(000111,"qqqqqqqq", "sssssssss", "0607080909", "rabat", "d.d@justice.gov.ma", "000111",
+                    encoder.encode("1234"), "Rédacteur judiciare", "2ère Grade", "", "Direction des Affaires Civiles", "DAC");
+
+            Center c1 = new Center("CENTRE 2", "Faculté des Sciences Juridiques, Economiques et Sociales AV Mohammed Ben Abdallah Ragragui, " +
+                    "Al Irfane. BP 6430, Rabat Instituts - Casablanca", "Casablanca", "Casablanca-Settat", new Date("31/10/2021 08:15"), new Date("31/10/2021 09:00"));
+
+            centerRepository.save(c1);
+
+            p1.setCenter(c1);
+            p2.setCenter(c1);
+            p3.setCenter(c1);
+            p4.setCenter(c1);
+            userRepository.save(p1);
+            userRepository.save(p2);
+            userRepository.save(p3);
+            userRepository.save(p4);*/
+
+            /*Center cc = centerRepository.findById(2l).get();
+            cc.setPresence(699);
+            cc.setAbsence(70);
+            centerRepository.save(cc);*/
             System.out.println("---------------------------------FIN WITH LOVE-----------------------------------------------");
 
         };
