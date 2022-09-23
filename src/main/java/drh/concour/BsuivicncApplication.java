@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
@@ -16,7 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @SpringBootApplication()
-public class BsuivicncApplication {
+public class BsuivicncApplication extends SpringBootServletInitializer {
+
+    /*@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        // return super.configure(builder);
+        return builder.sources(BsuivicncApplication.class);
+    }*/
 
     public static void main(String[] args) {
         SpringApplication.run(BsuivicncApplication.class, args);
@@ -281,10 +289,10 @@ public class BsuivicncApplication {
 
             /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-            User p1 = new User(12345,"dashboard", "admin", "0607080909", "rabat", "admin@justice.gov.ma", "admin",
+            User p1 = new User(987654,"super", "admin", "0607080909", "rabat", "sa@justice.gov.ma", "sa",
                     encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
 
-            Role r = roleRepository.getRoleByRoleName("ADMIN");
+            Role r = roleRepository.getRoleByRoleName("SA");
             List<Role> roles2 = new ArrayList<>();
             roles2.add(r);
             p1.setRoles(roles2);

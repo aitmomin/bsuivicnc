@@ -61,6 +61,13 @@ public class Endpoints {
     private FeedsRepository feedsRepository;
 
 
+    // ---> USER
+    @RequestMapping(value="/test/test")
+    public String test(){
+        return "name of center is "+centerRepository.findById(2l).get().getCity();
+    }
+
+
 
 
     // ---> AUTHENTICATION LOGIN
