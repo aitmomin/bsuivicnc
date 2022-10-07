@@ -22,6 +22,11 @@ public class CenterConcour implements Serializable {
     @EmbeddedId
     private CenterConcourID primaryKey = new CenterConcourID();
 
+    public CenterConcour(Center center, Concour concour) {
+        this.center = center;
+        this.concour = concour;
+    }
+
     @JsonIgnore
     @ManyToOne
     @MapsId("centerID")
@@ -33,5 +38,10 @@ public class CenterConcour implements Serializable {
     @MapsId("concourID")
     @JoinColumn(name = "concourID")
     private Concour concour;
+
+    // new version of mapping
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "centerConcour", cascade = CascadeType.ALL)
+    private List<Room> rooms = new ArrayList<Room>();
 
 }
