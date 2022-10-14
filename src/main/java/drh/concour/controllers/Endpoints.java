@@ -395,13 +395,14 @@ public class Endpoints {
 
 
     // ---> CONCOUR
-    @RequestMapping(value="/concours/{concourID}/rooms", method=RequestMethod.GET)
-    public ResponseEntity<?> getRoomsByConcour(@PathVariable Long concourID){
+    @RequestMapping(value="/{centerID}/concours/{concourID}/rooms", method=RequestMethod.GET)
+    public ResponseEntity<?> getRoomsByConcour(@PathVariable Long centerID, @PathVariable Long concourID){
         Concour cn = null;
         boolean exists = concourRepository.existsById(concourID);
-        if (exists){
+        boolean exists2 = centerRepository.existsById(centerID);
+        if (exists && exists2){
             cn = concourRepository.findById(concourID).get();
-            List<Room> rooms = roomRepository.getRoomsByConcourId(cn.getId());;
+            List<Room> rooms = roomRepository.getRoomsByConcourId(cn.getId(), centerID);;
             return ResponseEntity.ok(rooms);
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant du concour est incorrect !"),
@@ -441,8 +442,6 @@ public class Endpoints {
     public ResponseEntity<?> getAllRoomsByCenterId(@PathVariable Long centerID){
         boolean exists = centerRepository.existsById(centerID);
         if (exists){
-            // List<Object> rooms = roomRepository.AllRoomsByCenterId(centerID);
-            // (List<ConcourWithRooms>) (Object) roomRepository.getAllRoomsByCenterId(centerID)
             return ResponseEntity.ok(concourWithRoomsRepository.AllRoomsByCenterId(centerID));
         } else {
             return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),

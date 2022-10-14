@@ -13,6 +13,7 @@ public class ConcourWithRooms implements Serializable {
     private long id;
     private long concourid;
     private String city;
+    private String jury;
     private String title;
     private String rank;
     private String name;

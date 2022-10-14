@@ -42,13 +42,18 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
 
         CenterConcourRepository centerConcourRepository = context.getBean(CenterConcourRepository.class);
 
-        return args -> {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        /*return args -> {
 
 
             // CREATION OF USERS
+            User sa = new User(99999,"super", "admin", "0607080909", "rabat", "sa@justice.gov.ma", "sa",
+                    encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
+
+            User admin = new User(88888,"admin", "admin", "0607080909", "rabat", "admin@justice.gov.ma", "admin",
+                    encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
+
             User pr1 = new User(1111111,"aaaaaaaaaaaaaa", "aaaaaaaaaaaa", "0607080909", "rabat", "a.elbouraimi@justice.gov.ma", "1111111",
                     encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
             pr1.setResponsible(true);
@@ -146,6 +151,16 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
             roleRepository.save(ro1);
             roleRepository.save(ro2);
             roleRepository.save(ro3);
+
+            List<Role> roles1 = new ArrayList<>();
+            roles1.add(ro2);
+            admin.setRoles(roles1);
+            userRepository.save(admin);
+
+            List<Role> roles3 = new ArrayList<>();
+            roles3.add(ro3);
+            sa.setRoles(roles3);
+            userRepository.save(sa);
 
             List<Role> roles2 = new ArrayList<>();
             roles2.add(ro1);
@@ -778,12 +793,12 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
 
 
             // CREATION OF ROOMS GUELMIM
-            Room r107 = new Room("", "Salle : 1", 18, 15,3, ccn44);
-            Room r108 = new Room("", "Salle : 2", 6, 6,0, ccn44);
-            Room r109 = new Room("", "Amphi : 3", 15, 14,1, ccn44);
-            Room r110 = new Room("", "Amphi : 1", 77, 65,12, ccn44);
-            Room r111 = new Room("", "Salle : G", 18, 15,3, ccn44);
-            Room r112 = new Room("", "Amphi : 2", 4, 4,0, ccn44);
+            Room r107 = new Room("", "Salle : 1", 18, 15,3, ccn50);
+            Room r108 = new Room("", "Salle : 2", 6, 6,0, ccn49);
+            Room r109 = new Room("", "Amphi : 3", 15, 14,1, ccn52);
+            Room r110 = new Room("", "Amphi : 1", 77, 65,12, ccn51);
+            Room r111 = new Room("", "Salle : G", 18, 15,3, ccn54);
+            Room r112 = new Room("", "Amphi : 2", 4, 4,0, ccn53);
             roomRepository.save(r107);
             roomRepository.save(r108);
             roomRepository.save(r109);
@@ -792,17 +807,178 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
             roomRepository.save(r112);
 
 
+            // CREATION OF ROOMS MARRAKECH ............... from github
+            Room r113 = new Room("", "Salle : 12", 40, 39,1, ccn56);
+            Room r114 = new Room("", "Salle : 13", 42, 40,2, ccn56);
+            Room r115 = new Room("", "Salle : 14", 48, 45,3, ccn56);
+            Room r116 = new Room("", "Salle : 15", 39, 36,3, ccn55);
+            Room r117 = new Room("", "Amphi : allal el fassi", 54, 48,6, ccn58);
+            Room r118 = new Room("", "Amphi : malek ben anas", 97, 77,20, ccn57);
+            Room r119 = new Room("", "Amphi : cadi ayaad", 90, 74, 16, ccn57);
+            Room r120 = new Room("", "Amphi : ben el abass", 91, 73, 18, ccn60);
+            Room r121 = new Room("", "Amphi : ben rochd", 27, 24, 3, ccn59);
+            roomRepository.save(r113);
+            roomRepository.save(r114);
+            roomRepository.save(r115);
+            roomRepository.save(r116);
+            roomRepository.save(r117);
+            roomRepository.save(r118);
+            roomRepository.save(r119);
+            roomRepository.save(r120);
+            roomRepository.save(r121);
+
+
+            // CREATION OF ROOMS OUJDA
+            Room r122 = new Room("", "Amphi : maghrib arabi", 83, 78,5, ccn62);
+            Room r123 = new Room("", "Amphi : imam malek", 6, 6,0, ccn61);
+            Room r124 = new Room("", "Amphi : el qods", 84, 71, 13, ccn64);
+            Room r125 = new Room("", "Amphi : ben khaldoune", 80, 72, 8, ccn64);
+            Room r126 = new Room("", "Amphi : 3", 83, 71, 12, ccn63);
+            Room r127 = new Room("", "Amphi : 2", 61, 55, 6, ccn66);
+            Room r128 = new Room("", "Amphi : 1", 33, 30, 3, ccn65);
+            roomRepository.save(r122);
+            roomRepository.save(r123);
+            roomRepository.save(r124);
+            roomRepository.save(r125);
+            roomRepository.save(r126);
+            roomRepository.save(r127);
+            roomRepository.save(r128);
+
+
+            // CREATION OF ROOMS RABAT JURY 1
+            Room r129 = new Room("", "Salle : 2", 36, 32,4, ccn70);
+            Room r130 = new Room("", "Salle : 3", 36, 33,3, ccn70);
+            Room r131 = new Room("", "Salle : 4", 36, 32,4, ccn70);
+            Room r132 = new Room("", "Salle : 5", 36, 35,1, ccn70);
+            Room r133 = new Room("", "Salle : 6", 22, 20,2, ccn70);
+            Room r134 = new Room("", "Salle : 7", 22, 21,1, ccn70);
+            Room r135 = new Room("", "Salle : 8", 20, 16,4, ccn70);
+            Room r136 = new Room("", "Amphi : aziz lahbabi", 114, 103,11, ccn69);
+            Room r137 = new Room("", "Amphi : el aroui", 93, 78, 15, ccn69);
+            Room r138 = new Room("", "Amphi : el mernissi", 93, 79, 14, ccn69);
+            Room r139 = new Room("", "Amphi : zniber", 70, 58, 12, ccn72);
+            Room r140 = new Room("", "Salle : 14", 30, 28,2, ccn71);
+            Room r141 = new Room("", "Salle : 15", 30, 26,4, ccn71);
+            Room r142 = new Room("", "Salle : 16", 24, 22,2, ccn71);
+            Room r143 = new Room("", "Salle : 17", 24, 21,3, ccn71);
+            Room r144 = new Room("", "Salle : 18", 16, 14,2, ccn71);
+            roomRepository.save(r129);
+            roomRepository.save(r130);
+            roomRepository.save(r131);
+            roomRepository.save(r132);
+            roomRepository.save(r133);
+            roomRepository.save(r134);
+            roomRepository.save(r135);
+            roomRepository.save(r136);
+            roomRepository.save(r137);
+            roomRepository.save(r138);
+            roomRepository.save(r139);
+            roomRepository.save(r140);
+            roomRepository.save(r141);
+            roomRepository.save(r142);
+            roomRepository.save(r143);
+            roomRepository.save(r144);
+
+
+            // CREATION OF ROOMS RABAT JURY 2
+            Room r145 = new Room("", "Salle : 1", 35, 0,0, ccn74);
+            Room r146 = new Room("", "Salle : 2", 35, 0,0, ccn74);
+            Room r147 = new Room("", "Salle : 3", 35, 0,0, ccn74);
+            Room r148 = new Room("", "Salle : 4", 35, 0,0, ccn74);
+            Room r149 = new Room("", "Salle : 5", 35, 0,0, ccn74);
+            Room r150 = new Room("", "Salle : 6", 35, 0,0, ccn74);
+            Room r151 = new Room("", "Salle : 7", 25, 0,0, ccn74);
+            Room r152 = new Room("", "Salle : 8", 25, 0,0, ccn74);
+            Room r153 = new Room("", "Salle : 9", 25, 0,0, ccn74);
+            Room r154 = new Room("", "Salle : 10", 25, 0,0, ccn74);
+            Room r155 = new Room("", "Amphi : C", 60, 0,0, ccn74);
+            Room r156 = new Room("", "Amphi : D", 60, 0,0, ccn74);
+            Room r157 = new Room("", "Salle : 17", 30, 0,0, ccn74);
+            Room r158 = new Room("", "Salle : 18", 30, 0,0, ccn74);
+            Room r159 = new Room("", "Salle : 19", 30, 0,0, ccn74);
+            Room r160 = new Room("", "Salle : 20", 30, 0,0, ccn74);
+            Room r161 = new Room("", "Salle : 21", 30, 0,0, ccn74);
+            Room r162 = new Room("", "Salle : 22", 27, 0,0, ccn74);
+            Room r163 = new Room("", "Amphi : A", 66, 0,0, ccn73);
+            Room r164 = new Room("", "Amphi : B", 52, 0,0, ccn73);
+            roomRepository.save(r145);
+            roomRepository.save(r146);
+            roomRepository.save(r147);
+            roomRepository.save(r148);
+            roomRepository.save(r149);
+            roomRepository.save(r150);
+            roomRepository.save(r151);
+            roomRepository.save(r152);
+            roomRepository.save(r153);
+            roomRepository.save(r154);
+            roomRepository.save(r155);
+            roomRepository.save(r156);
+            roomRepository.save(r157);
+            roomRepository.save(r158);
+            roomRepository.save(r159);
+            roomRepository.save(r160);
+            roomRepository.save(r161);
+            roomRepository.save(r162);
+            roomRepository.save(r163);
+            roomRepository.save(r164);
+
 
 
             System.out.println("---------------------------------FIN WITH LOVE-----------------------------------------------");
+
+        };*/
+
+        return args -> {
+
+            /*for (int i = 1; i < 13; i++) {
+
+                User p1 = new User(011111 + i,"xxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxx", "0607080909", "kénitra", "u1"+i+"@justice.gov.ma", 011111 + i + "",
+                        encoder.encode("1234"), "Commissaire Judiciaire", "2ème Grade", "G684980", "Direction des Ressources Humaines", "DRH");
+                User p2 = new User(022222 + i,"xxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxx", "0607080909", "rabat", "u2"+i+"@justice.gov.ma", 022222 + i + "",
+                        encoder.encode("1234"), "Rédacteur judiciare", "1ère Grade", "", "Direction des Etudes de la Coopération et de la Modernisation", "DECM");
+                User p3 = new User(033333 + i,"xxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxx", "0607080909", "rabat", "u3"+i+"@justice.gov.ma", 033333 + i + "",
+                        encoder.encode("1234"), "Rédacteur judiciare", "2ère Grade", "", "Direction des Affaires Civiles", "DAC");
+                User p4 = new User(044444 + i,"xxxxxxxxxxxxxxxxxx", "xxxxxxxxxxxx", "0607080909", "rabat", "u4"+i+"@justice.gov.ma", 044444 + i + "",
+                        encoder.encode("1234"), "Rédacteur judiciare", "2ère Grade", "", "Direction de la legislation", "DL");
+
+                List<Role> roles = new ArrayList<>();
+                roles.add(roleRepository.findById(1l).get());
+
+                p1.setBlocked(true);
+                p2.setBlocked(true);
+                p3.setBlocked(true);
+                p4.setBlocked(true);
+
+                p1.setRoles(roles);p2.setRoles(roles);p3.setRoles(roles);p4.setRoles(roles);
+
+                p1.setCenter(centerRepository.findById(Long.parseLong(i+"")).get());
+                p2.setCenter(centerRepository.findById(Long.parseLong(i+"")).get());
+                p3.setCenter(centerRepository.findById(Long.parseLong(i+"")).get());
+                p4.setCenter(centerRepository.findById(Long.parseLong(i+"")).get());
+
+                userRepository.save(p1);
+                userRepository.save(p2);
+                userRepository.save(p3);
+                userRepository.save(p4);
+
+            }*/
 
         };
     }
 }
 
 
+            /*
 
+select c.city, r.concourid, r.id, cn.title, cn.rank, r.name, r.candidates, r.presence, r.absence
+from center c, center_concour cc, concour cn, room r
+where c.id = cc.centerid
+and cc.concourid = cn.id
+and cc.concourid = r.concourid
+and cc.centerid = r.centerid
+and c.id = 3
 
+* */
 
             /*
 
@@ -969,7 +1145,7 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
             cc.setAbsence(70);
             centerRepository.save(cc);*/
 
-    /*
+            /*
 
     Cities c1 = new Cities("ci1", "Tangier", "Tanger-Tétouan-Al Hoceïma", 947952);
     Cities c2 = new Cities("ci2", "Oujda", "Oriental", 409391);

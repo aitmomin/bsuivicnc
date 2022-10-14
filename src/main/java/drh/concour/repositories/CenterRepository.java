@@ -36,17 +36,19 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
     @Query(value="select SUM(r.absence)\n" +
             "from center c, center_concour cc, concour cn, room r\n" +
             "where c.id = cc.centerid\n" +
-            "\tand cc.concourid = cn.id\n" +
-            "\tand cn.id = r.concourid\n" +
-            "\tand c.id = ?1", nativeQuery = true)
+            "  and cc.concourid = cn.id\n" +
+            "  and cc.concourid = r.concourid\n" +
+            "  and cc.centerid = r.centerid\n" +
+            "  and c.id = ?1", nativeQuery = true)
     long sumAbsenceByCenter(long id);
 
     @Query(value="select SUM(r.presence)\n" +
             "from center c, center_concour cc, concour cn, room r\n" +
             "where c.id = cc.centerid\n" +
-            "\tand cc.concourid = cn.id\n" +
-            "\tand cn.id = r.concourid\n" +
-            "\tand c.id = ?1", nativeQuery = true)
+            "  and cc.concourid = cn.id\n" +
+            "  and cc.concourid = r.concourid\n" +
+            "  and cc.centerid = r.centerid\n" +
+            "  and c.id = ?1", nativeQuery = true)
     long sumPresenceByCenter(long id);
 
     @Query(value="select SUM(candidates) from center", nativeQuery = true)

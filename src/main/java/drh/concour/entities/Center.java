@@ -21,7 +21,7 @@ public class Center implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
+    private String jury;
     private String address;
     private String city;
     private String region;
@@ -47,8 +47,8 @@ public class Center implements Serializable {
     private long reports = 0;
 
 
-    public Center(String name, String address, String city, String region, Date plannedOpening, Date plannedClosing) {
-        this.name = name;
+    public Center(String jury, String address, String city, String region, Date plannedOpening, Date plannedClosing) {
+        this.jury = jury;
         this.address = address;
         this.city = city;
         this.region = region;
