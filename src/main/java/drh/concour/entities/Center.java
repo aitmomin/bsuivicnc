@@ -3,6 +3,7 @@ package drh.concour.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Proxy;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,24 +29,77 @@ public class Center implements Serializable {
     private Date plannedOpening;
     private Date plannedClosing;
     private Date dateConcour;
+
     // fields for steps in frontend
-    private boolean isReady;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isReady = false;
     private Date readyAt;
-    private boolean isClosed;
-    private Date closedAt;
-    private boolean isOpened;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isOpened = false;
     private Date openedAt;
-    private boolean isDistributed;
-    private Date distributedAt;
-    private boolean isEnd;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isClosed = false;
+    private Date closedAt;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isReadyDistributed = false;
+    private Date readyDistributedAt;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isStartDistributed = false;
+    private Date startDistributedAt;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isEndDistributed = false;
+    private Date endDistributedAt;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isExamEnd = false;
+    private Date examEndAt;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isEnd = false;
     private Date endAt;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isDelivered = false;
+    private Date deliveredAt;
+    @Column(columnDefinition = "varchar(50) default 'step1'")
     private String step = "step1";
+
     // fields for statistics
     private long candidates;
+    @Column(columnDefinition = "bigint default 0")
     private long presence = 0;
+    @Column(columnDefinition = "bigint default 0")
     private long absence = 0;
+    @Column(columnDefinition = "bigint default 0")
     private long reports = 0;
 
+
+    public Center(String jury, String address, String city, Date plannedOpening, Date plannedClosing) {
+        this.jury = jury;
+        this.address = address;
+        this.city = city;
+        this.plannedOpening = plannedOpening;
+        this.plannedClosing = plannedClosing;
+        this.isReady = false;
+        this.readyAt = null;
+        this.isClosed = false;
+        this.closedAt = null;
+        this.isOpened = false;
+        this.openedAt = null;
+        this.isReadyDistributed = false;
+        this.readyDistributedAt = null;
+        this.isStartDistributed = false;
+        this.startDistributedAt = null;
+        this.isEndDistributed = false;
+        this.endDistributedAt = null;
+        this.isExamEnd = false;
+        this.examEndAt = null;
+        this.isEnd = false;
+        this.endAt = null;
+        this.isDelivered = false;
+        this.deliveredAt = null;
+        this.candidates = 0;
+        this.presence = 0;
+        this.absence = 0;
+        this.reports = 0;
+    }
 
     public Center(String jury, String address, String city, String region, Date plannedOpening, Date plannedClosing) {
         this.jury = jury;
@@ -60,10 +114,18 @@ public class Center implements Serializable {
         this.closedAt = null;
         this.isOpened = false;
         this.openedAt = null;
-        this.isDistributed = false;
-        this.distributedAt = null;
+        this.isReadyDistributed = false;
+        this.readyDistributedAt = null;
+        this.isStartDistributed = false;
+        this.startDistributedAt = null;
+        this.isEndDistributed = false;
+        this.endDistributedAt = null;
+        this.isExamEnd = false;
+        this.examEndAt = null;
         this.isEnd = false;
         this.endAt = null;
+        this.isDelivered = false;
+        this.deliveredAt = null;
         this.candidates = 0;
         this.presence = 0;
         this.absence = 0;

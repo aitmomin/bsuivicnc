@@ -36,8 +36,13 @@ public class User implements Serializable {
     private String address;
     private String gender;
     private int jury;
-    private boolean isResponsible;
-    private boolean isBlocked;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isResponsible = false;
+    @Column(columnDefinition = "bit default 1")
+    private boolean isBlocked = true;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isAffected = false;
+
 
     public User(long doti, String lastname, String firstname, String tel, String city, String mail, String username, String password, String rank, String degree,
                 String cin, String direction, String code) {

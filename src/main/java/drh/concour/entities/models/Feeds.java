@@ -21,12 +21,14 @@ public class Feeds  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String centerName;
+    private String jury;
     private String event;
     private Date feedDate;
     private boolean seen = false;
 
-    public Feeds(String centerName, String event, Date feedDate) {
+    public Feeds(String centerName, String jury, String event, Date feedDate) {
         this.centerName = centerName;
+        this.jury = jury;
         this.event = event;
         this.feedDate = feedDate;
     }

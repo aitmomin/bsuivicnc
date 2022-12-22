@@ -2,6 +2,7 @@ package drh.concour.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -21,22 +22,34 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String number;
+    // private String number;
     private String name;
+    @Column(name = "`from`")
+    private long from;
+    @Column(name = "`to`")
+    private long to;
+    private String center;
+    private String jury;
     private long candidates;
+    @Column(columnDefinition = "bigint default 0")
     private long presence = 0;
+    @Column(columnDefinition = "bigint default 0")
     private long absence = 0;
+    @Column(columnDefinition = "bigint default 0")
     private long reports = 0;
+    @Column(columnDefinition = "bit default 0")
     private boolean isDone = false;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isAffected = false;
 
-    public Room(String number, String name, long candidates) {
-        this.number = number;
+    public Room(String name, long candidates) {
+        // this.number = number;
         this.name = name;
         this.candidates = candidates;
     }
 
-    public Room(String number, String name, long candidates, long presence, long absence, CenterConcour centerConcour) {
-        this.number = number;
+    public Room(String name, long candidates, long presence, long absence, CenterConcour centerConcour) {
+        // this.number = number;
         this.name = name;
         this.candidates = candidates;
         this.presence = presence;
