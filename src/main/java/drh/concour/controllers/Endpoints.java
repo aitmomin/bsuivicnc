@@ -104,6 +104,7 @@ public class Endpoints {
                 }
             }
 
+            // check this section !!!!!
             if(encoder.matches(request.getPassword(), user.getPassword())){
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -436,7 +437,11 @@ public class Endpoints {
         }
     }
 
-
+    @RequestMapping(value="/all/only/concours", method=RequestMethod.GET)
+    public ResponseEntity<?> getAllConcours(){
+        List<Concour> concours = concourRepository.findAll();
+        return ResponseEntity.ok(concours);
+    }
 
 
     // ---> ROOM
@@ -504,7 +509,11 @@ public class Endpoints {
         return ResponseEntity.ok(room);
     }
 
-
+    @RequestMapping(value="/all/only/rooms", method=RequestMethod.GET)
+    public ResponseEntity<?> getAllRooms(){
+        List<Room> rooms = roomRepository.findAll();
+        return ResponseEntity.ok(rooms);
+    }
 
 
     // ---> CRUD CENTER

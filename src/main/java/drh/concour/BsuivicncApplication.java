@@ -963,6 +963,16 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
 
             }*/
 
+            /*
+            User p1 = new User(987654,"super", "admin", "0607080909", "rabat", "sa@justice.gov.ma", "sa",
+                    encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
+
+            Role r = roleRepository.getRoleByRoleName("SA");
+            List<Role> roles2 = new ArrayList<>();
+            roles2.add(r);
+            p1.setRoles(roles2);
+            userRepository.save(p1);*/
+
         };
     }
 }
@@ -1102,17 +1112,6 @@ and c.id = 3
             userRepository.save(u);
 
             System.out.println("----------------------PEACE");*/
-
-            /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-            User p1 = new User(987654,"super", "admin", "0607080909", "rabat", "sa@justice.gov.ma", "sa",
-                    encoder.encode("1234"), "Ingénieur Chef", "Grade principal", "A998877", "Direction des Ressources Humaines", "DRH");
-
-            Role r = roleRepository.getRoleByRoleName("SA");
-            List<Role> roles2 = new ArrayList<>();
-            roles2.add(r);
-            p1.setRoles(roles2);
-            userRepository.save(p1);*/
 
             /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 

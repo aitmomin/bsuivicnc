@@ -28,8 +28,11 @@ public class Room implements Serializable {
     private long from;
     @Column(name = "`to`")
     private long to;
+    // additionnal fields for assignment
     private String center;
+    private String description;
     private String jury;
+    // stats fields
     private long candidates;
     @Column(columnDefinition = "bigint default 0")
     private long presence = 0;
