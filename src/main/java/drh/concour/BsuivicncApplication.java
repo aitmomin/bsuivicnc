@@ -44,7 +44,8 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        /*return args -> {
+        /*
+        return args -> {
 
 
             // CREATION OF USERS
@@ -926,9 +927,26 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
 
             System.out.println("---------------------------------FIN WITH LOVE-----------------------------------------------");
 
-        };*/
+        };
+        */
 
         return args -> {
+            /*User u = userRepository.findUserByUsername("1169562");
+            u.setPassword(encoder.encode("1234"));
+            userRepository.save(u);*/
+/*
+            User sa = new User(1,"super", "admin", "", "", "", "sa",
+                    encoder.encode("1234"), "", "", "", "", "");
+            User admin = new User(11,"", "admin", "", "", "", "admin",
+                    encoder.encode("1234"), "", "", "", "", "");
+
+            userRepository.save(sa);
+            userRepository.save(admin);
+        */
+        };
+    }
+}
+
 
             /*for (int i = 1; i < 13; i++) {
 
@@ -972,11 +990,6 @@ public class BsuivicncApplication extends SpringBootServletInitializer {
             roles2.add(r);
             p1.setRoles(roles2);
             userRepository.save(p1);*/
-
-        };
-    }
-}
-
 
             /*
 

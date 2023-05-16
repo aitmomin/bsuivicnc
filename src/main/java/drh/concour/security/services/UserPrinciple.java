@@ -35,7 +35,7 @@ public class UserPrinciple implements UserDetails {
     private List<Remark> remarks;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(long doti, String lastname, String firstname, String tel, String city, String mail, String identifier, String password, String rank, String degree, String cin, String direction, String code, int jury, boolean isResponsible, boolean isBlocked, Center center, List<Remark> remarks, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrinciple(long doti, String lastname, String firstname, String tel, String city, String mail, String identifier, String password, String rank, String degree, String cin, String direction, /*String code, int jury,*/ boolean isResponsible, boolean isBlocked, Center center, List<Remark> remarks, Collection<? extends GrantedAuthority> authorities) {
         this.doti = doti;
         this.lastname = lastname;
         this.firstname = firstname;
@@ -48,8 +48,8 @@ public class UserPrinciple implements UserDetails {
         this.degree = degree;
         this.cin = cin;
         this.direction = direction;
-        this.code = code;
-        this.jury = jury;
+        // this.code = code;
+        // this.jury = jury;
         this.isResponsible = isResponsible;
         this.isBlocked = isBlocked;
         this.center = center;
@@ -135,8 +135,8 @@ public class UserPrinciple implements UserDetails {
                 p.getDegree(),
                 p.getCin(),
                 p.getDirection(),
-                p.getCode(),
-                p.getJury(),
+                // p.getCode(),
+                // p.getJury(),
                 p.isResponsible(),
                 p.isBlocked(),
                 p.getCenter(),

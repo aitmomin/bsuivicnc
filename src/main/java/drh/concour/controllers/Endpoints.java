@@ -13,6 +13,7 @@ import drh.concour.repositories.*;
 import drh.concour.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -63,6 +65,8 @@ public class Endpoints {
     private ConcourWithRoomsRepository concourWithRoomsRepository;
     @Autowired
     private FeedsRepository feedsRepository;
+    @Autowired
+    private DocumentRepository documentRepository;
 
 
     // ---> USER
@@ -80,14 +84,14 @@ public class Endpoints {
         String jwt = "";
         UserDetails userDetails = null;
         if (!userRepository.existsByUsername(request.getUsername())) {
-            return new ResponseEntity<>(new ResponseMessage("l'identifiant est incorrect !"),
+            return new ResponseEntity<>(new ResponseMessage("خطأ في رقم التأجير"),
                     HttpStatus.BAD_REQUEST);
         }
         if (userRepository.existsByUsername(request.getUsername())) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             User user = userRepository.findUserByUsername(request.getUsername());
             if (user.isBlocked()) {
-                return new ResponseEntity<>(new ResponseMessage("l'identifiant est incorrect !"),
+                return new ResponseEntity<>(new ResponseMessage("خطأ في رقم التأجير"),
                         HttpStatus.BAD_REQUEST);
             } else {
                 if(encoder.matches(request.getPassword(), user.getPassword())){
@@ -99,7 +103,7 @@ public class Endpoints {
                     jwt = jwtProvider.generateJwtToken(authentication);
                     userDetails = (UserDetails) authentication.getPrincipal();
                 }else{
-                    return new ResponseEntity<>(new ResponseMessage("le mot de passe est incorrect !"),
+                    return new ResponseEntity<>(new ResponseMessage("خطأ في كلمة المرور"),
                             HttpStatus.BAD_REQUEST);
                 }
             }
@@ -114,7 +118,7 @@ public class Endpoints {
                 jwt = jwtProvider.generateJwtToken(authentication);
                 userDetails = (UserDetails) authentication.getPrincipal();
             }else{
-                return new ResponseEntity<>(new ResponseMessage("le mot de passe est incorrect !"),
+                return new ResponseEntity<>(new ResponseMessage("خطأ في كلمة المرور"),
                         HttpStatus.BAD_REQUEST);
             }
         }
@@ -224,106 +228,6 @@ public class Endpoints {
         }
     }
 
-    @PutMapping("/centers/{centerID}/ready")
-    public ResponseEntity<?> centerReady(@PathVariable Long centerID) {
-        Center center = null;
-        boolean exists = centerRepository.existsById(centerID);
-        if (exists){
-            center = centerRepository.findById(centerID).get();
-            center.setReady(true);
-            center.setStep("step2");
-            Date date = new Date();
-            System.out.println(date);
-            center.setReadyAt(date);
-            centerRepository.save(center);
-            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "Centre est Prêt", date));
-            return new ResponseEntity<>(center, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/centers/{centerID}/opened")
-    public ResponseEntity<?> centerOpened(@PathVariable Long centerID) {
-        Center center = null;
-        boolean exists = centerRepository.existsById(centerID);
-        if (exists){
-            center = centerRepository.findById(centerID).get();
-            center.setOpened(true);
-            center.setStep("step3");
-            Date date = new Date();
-            System.out.println(date);
-            center.setOpenedAt(date);
-            centerRepository.save(center);
-            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "Ouverture du centre", date));
-            return new ResponseEntity<>(center, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/centers/{centerID}/closed")
-    public ResponseEntity<?> centerClosed(@PathVariable Long centerID) {
-        Center center = null;
-        boolean exists = centerRepository.existsById(centerID);
-        if (exists){
-            center = centerRepository.findById(centerID).get();
-            center.setClosed(true);
-            center.setStep("step4");
-            Date date = new Date();
-            System.out.println(date);
-            center.setClosedAt(date);
-            centerRepository.save(center);
-            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "Fermeture du centre", date));
-            return new ResponseEntity<>(center, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/centers/{centerID}/distributed")
-    public ResponseEntity<?> centerDistributed(@PathVariable Long centerID) {
-        Center center = null;
-        boolean exists = centerRepository.existsById(centerID);
-        if (exists){
-            center = centerRepository.findById(centerID).get();
-            center.setEndDistributed(true);
-            center.setStep("step5");
-            Date date = new Date();
-            System.out.println(date);
-            center.setEndDistributedAt(date);
-            centerRepository.save(center);
-            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "Distribution des papiers", date));
-            return new ResponseEntity<>(center, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/centers/{centerID}/ended")
-    public ResponseEntity<?> centerEnded(@PathVariable Long centerID) {
-        Center center = null;
-        boolean exists = centerRepository.existsById(centerID);
-        if (exists){
-            center = centerRepository.findById(centerID).get();
-            center.setEnd(true);
-            center.setStep("");
-            Date date = new Date();
-            System.out.println(date);
-            center.setEndAt(date);
-            centerRepository.save(center);
-            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "Fin du concour", date));
-            return new ResponseEntity<>(center, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @RequestMapping(value="/all/centers", method=RequestMethod.GET)
     public ResponseEntity<?> getAllCenters(){
         List<Center> centers = centerRepository.findAll();
@@ -364,15 +268,39 @@ public class Endpoints {
         return ResponseEntity.ok(numbers);
     }
 
-    @RequestMapping(value="/count/distributed/centers", method=RequestMethod.GET)
-    public ResponseEntity<?> countAllDistributedCenters(){
-        long numbers = centerRepository.countAllDistributedCenters();
+    @RequestMapping(value="/count/ready/distributed/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllReadyDistributedCenters(){
+        long numbers = centerRepository.countAllReadyDistributedCenters();
         return ResponseEntity.ok(numbers);
     }
 
-    @RequestMapping(value="/count/ended/centers", method=RequestMethod.GET)
-    public ResponseEntity<?> countAllEndedCenters(){
-        long numbers = centerRepository.countAllEndedCenters();
+    @RequestMapping(value="/count/start/distributed/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllStartDistributedCenters(){
+        long numbers = centerRepository.countAllStartDistributedCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/end/distributed/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllEndDistributedCenters(){
+        long numbers = centerRepository.countAllEndDistributedCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/exam/end/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllExamEndCenters(){
+        long numbers = centerRepository.countAllExamEndCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/end/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllEndCenters(){
+        long numbers = centerRepository.countAllEndCenters();
+        return ResponseEntity.ok(numbers);
+    }
+
+    @RequestMapping(value="/count/delivered/centers", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllDeliveredCenters(){
+        long numbers = centerRepository.countAllDeliveredCenters();
         return ResponseEntity.ok(numbers);
     }
 
@@ -399,6 +327,197 @@ public class Endpoints {
         }
     }
 
+
+    // ---> STEPS OF CENTER
+    @PutMapping("/centers/{centerID}/ready")
+    public ResponseEntity<?> centerReady(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setReady(true);
+            center.setStep("step2");
+            Date date = new Date();
+            System.out.println(date);
+            center.setReadyAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "المركز جاهز", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/{centerID}/opened")
+    public ResponseEntity<?> centerOpened(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setOpened(true);
+            center.setStep("step3");
+            Date date = new Date();
+            System.out.println(date);
+            center.setOpenedAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "فتح الأبواب", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/{centerID}/closed")
+    public ResponseEntity<?> centerClosed(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setClosed(true);
+            center.setStep("step4");
+            Date date = new Date();
+            System.out.println(date);
+            center.setClosedAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "إغلاق الأبواب", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/{centerID}/ready/distributed")
+    public ResponseEntity<?> centerReadyDistributed(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setReadyDistributed(true);
+            center.setStep("step5");
+            Date date = new Date();
+            System.out.println(date);
+            center.setReadyDistributedAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "جاهز لتوزيع السؤال", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/start/distributed")
+    public void centerStartDistributed() {
+        centerRepository.findAll().forEach(center -> {
+            center.setStartDistributed(true);
+            center.setStep("step6");
+            Date date = new Date();
+            center.setStartDistributedAt(date);
+            centerRepository.save(center);
+        });
+        feedsRepository.save(new Feeds("الإدارة المركزية", "", "إعطاء انطلاقة توزيع السؤال", new Date()));
+        // return new ResponseEntity<>(center, HttpStatus.OK);
+    }
+
+    @PutMapping("/centers/{centerID}/end/distributed")
+    public ResponseEntity<?> centerEndDistributed(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setEndDistributed(true);
+            center.setStep("step7");
+            Date date = new Date();
+            System.out.println(date);
+            center.setEndDistributedAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "تم التوزيع", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/{centerID}/end/exam")
+    public ResponseEntity<?> centerEndExam(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setExamEnd(true);
+            center.setStep("step8");
+            Date date = new Date();
+            System.out.println(date);
+            center.setExamEndAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "انتهاء المادة", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/{centerID}/end")
+    public ResponseEntity<?> centerEnded(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setEnd(true);
+            center.setStep("step9");
+            Date date = new Date();
+            System.out.println(date);
+            center.setEndAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "انتهاء المباراة", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/centers/{centerID}/delivered")
+    public ResponseEntity<?> centerDelivered(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setDelivered(true);
+            center.setStep("step10");
+            Date date = new Date();
+            System.out.println(date);
+            center.setDeliveredAt(date);
+            centerRepository.save(center);
+            feedsRepository.save(new Feeds(center.getCity(), center.getJury(), "تم التسليم", date));
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/validate/statistics/centers/{centerID}")
+    public ResponseEntity<?> validateStatistics(@PathVariable Long centerID) {
+        Center center = null;
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            center = centerRepository.findById(centerID).get();
+            center.setValidated(true);
+            Date date = new Date();
+            center.setValidatedAt(date);
+            centerRepository.save(center);
+            return new ResponseEntity<>(center, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> le centre n'existe pas."),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 
@@ -444,6 +563,8 @@ public class Endpoints {
     }
 
 
+
+
     // ---> ROOM
     @RequestMapping(value="/centers/{centerID}/rooms", method=RequestMethod.GET)
     public ResponseEntity<?> getRoomsByCenter(@PathVariable Long centerID){
@@ -480,6 +601,11 @@ public class Endpoints {
         }
     }
 
+    @RequestMapping(value="/all/centers/all/rooms", method=RequestMethod.GET)
+    public ResponseEntity<?> AllRoomsOfAllCenters(){
+        return ResponseEntity.ok(concourWithRoomsRepository.AllRoomsOfAllCenters());
+    }
+
     @PutMapping("/room/update/absence/{roomID}")
     public ResponseEntity<?> updateAbsenceOfRoom(@PathVariable Long roomID, @RequestParam("absence") String absence, @RequestParam("centerID") String centerID){
         Room room = null;
@@ -514,6 +640,19 @@ public class Endpoints {
         List<Room> rooms = roomRepository.findAll();
         return ResponseEntity.ok(rooms);
     }
+
+    @RequestMapping(value="/count/center/rooms/{centerID}", method=RequestMethod.GET)
+    public ResponseEntity<?> countAllRoomsByCenterId(@PathVariable Long centerID){
+        boolean exists = centerRepository.existsById(centerID);
+        if (exists){
+            return ResponseEntity.ok(concourWithRoomsRepository.countAllRoomsByCenterId(centerID));
+        } else {
+            return new ResponseEntity<>(new ResponseMessage("Erreur -> l'identifiant est incorrect !"),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 
     // ---> CRUD CENTER
@@ -568,5 +707,25 @@ public class Endpoints {
         }
     }
 
+
+
+    // ---> Document
+    @RequestMapping(value="/all/documents", method=RequestMethod.GET)
+    public ResponseEntity<?> getAllDocuments(){
+        List<Document> docs = documentRepository.findAll();
+        return ResponseEntity.ok(docs);
+    }
+
+    @RequestMapping(value="/file/url/{id}", method=RequestMethod.GET)
+    public ResponseEntity<?> getFile(@PathVariable Long id) {
+        Optional<Document> fileOptional = Optional.of(documentRepository.findById(id).get());
+        if(fileOptional.isPresent()) {
+            Document file = fileOptional.get();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getNameFile() + "\"")
+                    .body(file.getUrl());
+        }
+        return ResponseEntity.status(404).body(null);
+    }
 
 }

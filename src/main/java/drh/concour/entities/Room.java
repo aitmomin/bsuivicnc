@@ -28,10 +28,12 @@ public class Room implements Serializable {
     private long from;
     @Column(name = "`to`")
     private long to;
+
     // additionnal fields for assignment
     private String center;
     private String description;
     private String jury;
+
     // stats fields
     private long candidates;
     @Column(columnDefinition = "bigint default 0")
@@ -51,7 +53,7 @@ public class Room implements Serializable {
         this.candidates = candidates;
     }
 
-    public Room(String name, long candidates, long presence, long absence, CenterConcour centerConcour) {
+    public Room(String n, String name, long candidates, long presence, long absence, CenterConcour centerConcour) {
         // this.number = number;
         this.name = name;
         this.candidates = candidates;

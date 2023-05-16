@@ -22,9 +22,10 @@ public class Center implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String jury;
-    private String address;
     private String city;
+    private String jury;
+    private String fullName;
+    private String address;
     private String region;
     private Date plannedOpening;
     private Date plannedClosing;
@@ -58,6 +59,10 @@ public class Center implements Serializable {
     @Column(columnDefinition = "bit default 0")
     private boolean isDelivered = false;
     private Date deliveredAt;
+
+    @Column(columnDefinition = "bit default 0")
+    private boolean isStatsReady = false;
+
     @Column(columnDefinition = "varchar(50) default 'step1'")
     private String step = "step1";
 
@@ -69,6 +74,9 @@ public class Center implements Serializable {
     private long absence = 0;
     @Column(columnDefinition = "bigint default 0")
     private long reports = 0;
+    @Column(columnDefinition = "bit default 0")
+    private boolean isValidated = false;
+    private Date validatedAt;
 
 
     public Center(String jury, String address, String city, Date plannedOpening, Date plannedClosing) {

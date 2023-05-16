@@ -15,6 +15,7 @@ public class ConcourWithRooms implements Serializable {
     private long concourid;
     private String city;
     private String jury;
+    private String address;
     private String rank;
     private String title;
     private String name;
@@ -25,4 +26,7 @@ public class ConcourWithRooms implements Serializable {
     private long to;
     private long presence = 0;
     private long absence = 0;
+    private boolean isDone = false;
+    private boolean isAffected = false;
+
 }
