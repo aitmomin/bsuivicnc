@@ -75,6 +75,10 @@ public class Endpoints {
         return "name of center is "+centerRepository.findById(2l).get().getCity();
     }
 
+    @RequestMapping(value="/test")
+    public String test2(){
+        return "API works fine !";
+    }
 
 
 
